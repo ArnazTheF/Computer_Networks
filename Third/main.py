@@ -14,8 +14,8 @@ from selenium.webdriver.chrome.options import Options
 
 def click_next():
     wait = WebDriverWait(driver, 10)
-    button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".pagination-container__item._next")))
-    
+    button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 
+                                                    ".pagination-container__item._next")))
     driver.execute_script('document.querySelector("nav.tabbar.js-tabbar").remove();')
     button.click()
     print(driver.current_url)
@@ -34,11 +34,9 @@ def collecting_data(link):
         item = driver.find_element(By.CLASS_NAME, "mt-product-info__list")
         #print(item.text)
         #print("----")
-        
         no_data_message = "Мы обновляем информацию, характеристики товара скоро появятся."
         if no_data_message in item.text:
             return None
-        
         lines = item.text.strip().split("\n")
         for line in lines:
             key, value = line.split(":", 1)
@@ -58,12 +56,10 @@ def write_to_csv(data, filename="guitars.csv"):
     for item in data:
         if item and "Параметры" in item:
             all_fieldnames.update(item["Параметры"].keys())
-
     fieldnames = ["Ссылка"] + sorted(all_fieldnames)
     with open(filename, mode="w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
-
         for item in data:
             if item:
                 row = {"Ссылка": item["Ссылка"]}
@@ -73,26 +69,22 @@ def write_to_csv(data, filename="guitars.csv"):
                         row[field] = ""
                 writer.writerow(row)
 
-start_url = 'https://www.muztorg.ru/category/elektrogitary'
 
+start_url = 'https://www.muztorg.ru/category/elektrogitary'
 links_to_guitars = []
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get(start_url)
-
 collecting_links(driver, links_to_guitars)
 for i in range(1):
     click_next()
     collecting_links(driver, links_to_guitars)
-
 #links_to_guitars = links_to_guitars[:1]
 guitars = []
 for link_to_guitar in links_to_guitars:
     #print(link_to_guitar)
     guitar = collecting_data(link_to_guitar)
     guitars.append(guitar)
-
 write_to_csv(guitars)
-
 driver.quit()
 
 

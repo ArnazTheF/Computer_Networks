@@ -21,8 +21,8 @@ args = parser.parse_args()
 def connect_to_db():
     conn = psycopg2.connect(
         dbname='guitars',
-        user='arnazthef',
-        password='Artificial_Intelligence_Dude54',
+        user='',
+        password='',
         host='localhost',
         port='5432'
     )

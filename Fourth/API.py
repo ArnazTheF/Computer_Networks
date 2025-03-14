@@ -10,8 +10,8 @@ from psycopg2 import extras
 def connect_to_db():
     conn = psycopg2.connect(
         dbname='guitars',
-        user='arnazthef',
-        password='Artificial_Intelligence_Dude54',
+        user='',
+        password='',
         host='localhost',
         port='5432',
         client_encoding='UTF8'
